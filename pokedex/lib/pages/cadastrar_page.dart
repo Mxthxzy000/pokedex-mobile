@@ -129,32 +129,34 @@ class _CadastrarPageState extends State<CadastrarPage> {
 
     final pokemon = Pokemon(
       nome: nomeController.text,
-
       tipo: tipoSelecionado!,
-
       localizacao: localController.text,
-
       dataRegistro: DateTime.now(),
-
       foto: foto,
-
       hp: int.tryParse(hpController.text) ?? 0,
-
       ataque: int.tryParse(ataqueController.text) ?? 0,
-
       defesa: int.tryParse(defesaController.text) ?? 0,
-
       observacoes: observacaoController.text,
     );
 
-    await _service.cadastrarPokemon(pokemon);
+    try {
+      await _service.cadastrarPokemon(pokemon);
 
-    setState(() {
-      salvando = false;
-    });
-
-    if (mounted) {
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao cadastrar: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          salvando = false;
+        });
+      }
     }
   }
 

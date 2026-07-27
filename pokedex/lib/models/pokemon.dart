@@ -33,12 +33,16 @@ class Pokemon {
   });
 
   factory Pokemon.fromMap(Map<String, dynamic> map) {
+    final dynamic registro = map['data_registro'];
+
     return Pokemon(
       id: map['id'],
       nome: map['nome'],
       tipo: map['tipo'],
       localizacao: map['localizacao'],
-      dataRegistro: DateTime.parse(map['data_registro']),
+      dataRegistro: registro is DateTime
+          ? registro
+          : DateTime.parse(registro.toString()),
       foto: map['foto'],
       hp: map['hp'],
       ataque: map['ataque'],
@@ -48,8 +52,7 @@ class Pokemon {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    final Map<String, dynamic> map = {
       'nome': nome,
       'tipo': tipo,
       'localizacao': localizacao,
@@ -60,6 +63,12 @@ class Pokemon {
       'defesa': defesa,
       'observacoes': observacoes,
     };
+
+    if (id != null) {
+      map['id'] = id;
+    }
+
+    return map;
   }
 
   Pokemon copyWith({
